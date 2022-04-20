@@ -5,6 +5,7 @@ name: CI
 # Controls when the workflow will run
 on:
   # Triggers the workflow on POST request
+  # Example: curl -XPOST https://api.github.com/repos/Eclion/ci-playground/dispatches --header 'authorization: Bearer GH_TOKEN' --data '{"client_payload":{"name": "john", "ref": "dev"}, "event_type": "test"}'
   repository_dispatch:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -20,7 +21,9 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.client_payload.ref }}
 
       # Runs a single command using the runners shell
       - name: Run a one-line script
-        run: echo "${{ github.event.client_payload.name }}"
+        run: echo "${{ toJson(github.event.client_payload.data) }}"
