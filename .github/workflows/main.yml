@@ -29,7 +29,7 @@ jobs:
         run: |
           cat entries.json
           echo "${{ toJson(github.event.client_payload.data) }}"
-          cat <<< $(jq '. += [toJson(github.event.client_payload.data)]' entries.json) > entries.json
+          cat <<< $(jq '. += [${{ toJson(github.event.client_payload.data) }}]' entries.json) > entries.json || exit 1
           
       - name: Commit changes to entries.json
         uses: EndBug/add-and-commit@v9
