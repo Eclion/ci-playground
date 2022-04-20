@@ -26,4 +26,13 @@ jobs:
 
       # Runs a single command using the runners shell
       - name: Run a one-line script
-        run: echo "${{ toJson(github.event.client_payload.data) }}"
+        run: |
+          cat entries.json
+          echo "${{ toJson(github.event.client_payload.data) }}"
+          cat <<< $(jq '. += [toJson(github.event.client_payload.data)]' entries.json) > entries.json
+          
+      - name: Commit changes to entries.json
+        uses: EndBug/add-and-commit@v9
+        with:
+          message: 'Adds a new entry'
+          add: 'entries.json'
