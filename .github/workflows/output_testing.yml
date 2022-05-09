@@ -25,5 +25,13 @@ jobs:
       continue-on-error: true
 
     - name: Display outputs
-      run: echo "${{ steps.json_format_check.outcome }}" && echo "${{ steps.json_format_check.outputs }}"
+      run: echo "${{ steps.json_format_check.outcome }}" && echo "${{ steps.json_format_check.outputs.stdout }}"
+      
+    #- name: Test script
+    #  uses: actions/github-script@v6
+    #  if: github.event_name == 'pull_request'
+    #  with:
+    #    github-token: ${{ secrets.TOKEN }}
+    #    script: |
+    #      const output = `${{ steps.json_format_check.outputs.stdout }}`
   
