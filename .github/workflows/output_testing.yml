@@ -47,9 +47,15 @@ jobs:
 
     
           // 2. Prepare format of the comment
-          const output = `#### Playground output
-          Ctrl char check list:\n${{ steps.ctrl_char_check.outputs.output }}
-          Json validity list:\n${{ steps.json_format_check.outputs.output }}`
+          let output = `#### Playground output`
+
+          if ("${{ steps.ctrl_char_check.outputs.output }}" != "") {
+            output = output + "\nCtrl char check list:\n${{ steps.ctrl_char_check.outputs.output }}"
+          }
+
+          if ("${{ steps.ctrl_char_check.outputs.output }}" != "") {
+            output = output + "\nJson validity list:\n${{ steps.json_format_check.outputs.output }}"
+          }
 
 
           // 3. If we have a comment, update it, otherwise create a new one
