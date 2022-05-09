@@ -27,11 +27,43 @@ jobs:
     - name: Display outputs
       run: echo "json outcome is ${{ steps.json_format_check.outcome }}" && echo "json output is ${{ steps.json_format_check.outputs.stdout }}" && echo "char check output is ${{ steps.ctrl_char_check.outputs.stdout }}" && echo "char check length is ${{ steps.json_format_check.outputs.stdout.length }}"
       
-    #- name: Test script
-    #  uses: actions/github-script@v6
-    #  if: github.event_name == 'pull_request'
-    #  with:
-    #    github-token: ${{ secrets.TOKEN }}
-    #    script: |
-    #      const output = `${{ steps.json_format_check.outputs.stdout }}`
-  
+    - name: Test script
+      uses: actions/github-script@v6
+      if: github.event_name == 'pull_request'
+      env:
+        PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
+      with:
+        github-token: ${{ secrets.TOKEN }}
+        script: |
+          // 1. Retrieve existing bot comments for the PR
+          const { data: comments } = await github.rest.issues.listComments({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            issue_number: context.issue.number,
+          })
+          const botComment = comments.find(comment => {
+            return comment.user.type === 'Bot' && comment.body.includes('Playground output')
+          })
+
+    
+          // 2. Prepare format of the comment
+          const output = `#### Playground output
+          ${process.env.PLAN}`
+
+
+          // 3. If we have a comment, update it, otherwise create a new one
+          if (botComment) {
+            github.rest.issues.updateComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              comment_id: botComment.id,
+              body: output
+            })
+          } else {
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: output
+            })
+          }
