@@ -77,5 +77,5 @@ jobs:
 
     - name: Fail if a check failed
       run: exit 1
-      if: steps.json_format_check.outputs.output != "" or steps.ctrl_char_check.outputs.output != ""
+      if: ${{ steps.json_format_check.outputs.output != "" or steps.ctrl_char_check.outputs.output != "" }}
       
