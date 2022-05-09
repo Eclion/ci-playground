@@ -25,7 +25,7 @@ jobs:
       continue-on-error: true
 
     - name: Display outputs
-      run: echo "${{ steps.json_format_check.outcome }}" && echo "${{ steps.json_format_check.outputs.stdout }}"
+      run: echo "${{ steps.json_format_check.outcome }}" && echo "${{ steps.json_format_check.outputs.stdout }}" && echo "${{ steps.ctrl_char_check.outputs.stdout }}" "${{ steps.json_format_check.outputs.stdout.length }}"
       
     #- name: Test script
     #  uses: actions/github-script@v6
