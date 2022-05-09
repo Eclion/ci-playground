@@ -58,7 +58,7 @@ jobs:
           }
           
           if (("${{ steps.ctrl_char_check.outputs.output }}" == "") && ("${{ steps.json_format_check.outputs.output }}" == "")) {
-            output = output + "####Inputs validated\n"
+            output = output + "#### Inputs validated\n"
           }
 
 
