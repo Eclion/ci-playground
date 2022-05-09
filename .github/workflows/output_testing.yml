@@ -13,6 +13,7 @@ jobs:
     name: 'Input validation'
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/checkout@v3
 
     - name: Display the f*** is in the folder
       run: ls
