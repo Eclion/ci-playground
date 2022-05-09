@@ -17,17 +17,17 @@ jobs:
 
     - name: Json format check
       id: json_format_check
-      run: for file in $(find . -type f -name *.json); do $(cat $file | jq empty) || echo "$file is not a valid json file"; done
+      run: echo "::set-output name=output::$(for file in $(find . -type f -name *.json); do $(cat $file | jq empty) || echo \"$file is not a valid json file\"; done)
       continue-on-error: true
 
     # https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions#example-declaring-outputs-for-composite-actions
     - name: Control character check
       id: ctrl_char_check
-      run: echo "::set-output name=test::$(grep '\[' --include=*.json -r . | sed 's/:.*//g' | uniq)"
+      run: echo "::set-output name=output::$(grep '\[' --include=*.json -r . | sed 's/:.*//g' | uniq)"
       continue-on-error: true
 
     - name: Display outputs
-      run: echo "json outcome is ${{ steps.json_format_check.outcome }}" && echo "json output is ${{ steps.json_format_check.outputs.stdout }}" && echo "char check output is ${{ steps.ctrl_char_check.outputs.stdout }}" && echo "char check length is ${{ steps.json_format_check.outputs.stdout.length }}"
+      run: echo "json output is ${{ steps.json_format_check.outputs.output }}" && echo "char check output is ${{ steps.ctrl_char_check.outputs.output }}" && echo "char check length is ${{ steps.json_format_check.outputs.output.length }}"
       
     - name: Test script
       uses: actions/github-script@v6
@@ -48,7 +48,8 @@ jobs:
     
           // 2. Prepare format of the comment
           const output = `#### Playground output
-          Ctrl char check list:\n${{ steps.ctrl_char_check.outputs.test }}`
+          Ctrl char check list:\n${{ steps.ctrl_char_check.outputs.output }}
+          Json validity list:\n${{ steps.json_format_check.outputs.output }}`
 
 
           // 3. If we have a comment, update it, otherwise create a new one
