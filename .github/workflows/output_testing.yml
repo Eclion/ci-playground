@@ -15,17 +15,15 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
-    - name: Display the f*** is in the folder
-      run: ls
-
     - name: Json format check
       id: json_format_check
       run: for file in $(find . -type f -name *.json); do $(cat $file | jq empty) || echo "$file is not a valid json file"; done
       continue-on-error: true
 
+    # https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions#example-declaring-outputs-for-composite-actions
     - name: Control character check
       id: ctrl_char_check
-      run: grep "\[" --include=*.json -r . | sed "s/:.*//g" | uniq
+      run: echo "::set-output name=test::$(grep \"\[\" --include=*.json -r . | sed \"s/:.*//g\" | uniq)"
       continue-on-error: true
 
     - name: Display outputs
