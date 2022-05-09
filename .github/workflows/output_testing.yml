@@ -1,23 +1,28 @@
 name: 'output testing'
 
+
+on:
+  push:
+    branches:
+    - master
+  pull_request:
+
 jobs:
-  name: 'Input validation'
-  runs-on: ubuntu-latest
-  steps:
+  json_validation:
+    name: 'Input validation'
+    runs-on: ubuntu-latest
+    steps:
 
-  - name: Json format check
-    id: json_format_check
-    run:
-      shell: for file in $(find . -type f -name *.json); do $(cat $file | jq empty) || echo "$file is not a valid json file"; done
-    continue-on-error: true
+    - name: Json format check
+      id: json_format_check
+      run: for file in $(find . -type f -name *.json); do $(cat $file | jq empty) || echo "$file is not a valid json file"; done
+      continue-on-error: true
 
-  - name: Control character check
-    id: ctrl_char_check
-    run:
-      shell: grep "\\\\" -r . | sed "s/:.*//g" | uniq
-    continue-on-error: true
+    - name: Control character check
+      id: ctrl_char_check
+      run: grep "\\\\" -r . | sed "s/:.*//g" | uniq
+      continue-on-error: true
 
-  - name: Display outputs:
-    run:
-      shell: echo "${{ steps.json_format_check.outcome }}" && echo "${{ steps.json_format_check.outputs }}"
+    - name: Display outputs
+      run: echo "${{ steps.json_format_check.outcome }}" && echo "${{ steps.json_format_check.outputs }}"
   
