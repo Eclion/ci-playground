@@ -23,7 +23,7 @@ jobs:
     # https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions#example-declaring-outputs-for-composite-actions
     - name: Control character check
       id: ctrl_char_check
-      run: echo "::set-output name=test::$(grep \"\[\" --include=*.json -r . | sed \"s/:.*//g\" | uniq)"
+      run: echo "::set-output name=test::$(grep '\[' --include=*.json -r . | sed 's/:.*//g' | uniq)"
       continue-on-error: true
 
     - name: Display outputs
