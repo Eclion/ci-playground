@@ -76,6 +76,9 @@ jobs:
           }
 
     - name: Fail if a check failed
-      run: exit 1
+      run: |
+        [[ -z "${{ steps.json_format_check.outputs.output }}" ]] || echo "The following files are invalid json: \n${{ steps.json_format_check.outputs.output }}"
+        [[ -z "${{ steps.ctrl_char_check.outputs.output }}" ]] || echo "The following files contain control characters: \n${{ steps.ctrl_char_check.outputs.output }}"
+        exit 1
       if: ${{ steps.json_format_check.outputs.output != '' || steps.ctrl_char_check.outputs.output != '' }}
       
