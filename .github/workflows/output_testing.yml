@@ -50,11 +50,11 @@ jobs:
           let output = `#### Playground output`
 
           if ("${{ steps.ctrl_char_check.outputs.output }}" != "") {
-            output = output + "\nCtrl char check list:\n${{ steps.ctrl_char_check.outputs.output }}"
+            output = output + "\nCtrl Char Check List:\n$'{{ steps.ctrl_char_check.outputs.output }}'"
           }
 
           if ("${{ steps.ctrl_char_check.outputs.output }}" != "") {
-            output = output + "\nJson validity list:\n${{ steps.json_format_check.outputs.output }}"
+            output = output + "\nJson validity list:\n'${{ steps.json_format_check.outputs.output }}'"
           }
 
 
