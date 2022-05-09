@@ -25,7 +25,7 @@ jobs:
 
     - name: Control character check
       id: ctrl_char_check
-      run: grep "[" -r . | sed "s/:.*//g" | uniq && echo "test is $(grep "[" -r . | sed "s/:.*//g" | uniq)"
+      run: grep "\[" --include=*.json -r . | sed "s/:.*//g" | uniq
       continue-on-error: true
 
     - name: Display outputs
