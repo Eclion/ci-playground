@@ -23,7 +23,7 @@ jobs:
     # https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions#example-declaring-outputs-for-composite-actions
     - name: Control character check
       id: ctrl_char_check
-      run: echo "::set-output name=output::$(grep '\[' --include=*.json -r . | sed 's/:.*//g' | uniq)"
+      run: echo "::set-output name=output::$(grep '\\' --include=*.json -r . | sed 's/:.*//g' | uniq)"
       continue-on-error: true
 
     - name: Display outputs
@@ -55,6 +55,10 @@ jobs:
 
           if ("${{ steps.json_format_check.outputs.output }}" != "") {
             output = output + "\nJson validity list:\n${{ steps.json_format_check.outputs.output }}"
+          }
+          
+          if (("${{ steps.ctrl_char_check.outputs.output }}" == "") && ("${{ steps.json_format_check.outputs.output }}" == "")) {
+            output = output + "####Inputs validated\n"
           }
 
 
