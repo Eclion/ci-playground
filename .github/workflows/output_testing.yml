@@ -32,8 +32,6 @@ jobs:
     - name: Test script
       uses: actions/github-script@v6
       if: github.event_name == 'pull_request'
-      env:
-        PLAN: "Ctrl char: ${{ steps.ctrl_char_check.outputs.test }} / ${{ steps.ctrl_char_check.outputs.value }}"
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
@@ -50,7 +48,7 @@ jobs:
     
           // 2. Prepare format of the comment
           const output = `#### Playground output
-          ${process.env.PLAN}`
+          Ctrl char check list:\n${{ steps.ctrl_char_check.outputs.test }}`
 
 
           // 3. If we have a comment, update it, otherwise create a new one
