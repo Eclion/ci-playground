@@ -47,7 +47,7 @@ jobs:
 
     
           // 2. Prepare format of the comment
-          let output = `#### Playground output`
+          let output = `### Playground output\n`
 
           if ("${{ steps.ctrl_char_check.outputs.output }}" != "") {
             output = output + "\nCtrl char check list:\n${{ steps.ctrl_char_check.outputs.output }}"
