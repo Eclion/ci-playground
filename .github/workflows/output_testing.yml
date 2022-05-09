@@ -21,7 +21,7 @@ jobs:
 
     - name: Control character check
       id: ctrl_char_check
-      run: grep "\\\\" -r . | sed "s/:.*//g" | uniq
+      run: grep "{" -r . | sed "s/:.*//g" | uniq
       continue-on-error: true
 
     - name: Display outputs
