@@ -23,6 +23,6 @@ jobs:
       run: grep "\\\\" -r . | sed "s/:.*//g" | uniq
       continue-on-error: true
 
-    - name: Display outputs
-      run: echo "${{ steps.json_format_check.outcome }}" && echo "${{ steps.json_format_check.outputs }}"
+#    - name: Display outputs
+#      run: echo "${{ steps.json_format_check.outcome }}" && echo "${{ steps.json_format_check.outputs }}"
   
