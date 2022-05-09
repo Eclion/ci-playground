@@ -14,6 +14,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
+    - name: Display the f*** is in the folder
+      run: ls
+
     - name: Json format check
       id: json_format_check
       run: for file in $(find . -type f -name *.json); do $(cat $file | jq empty) || echo "$file is not a valid json file"; done
