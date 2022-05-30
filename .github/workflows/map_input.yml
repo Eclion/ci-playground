@@ -1,4 +1,4 @@
-name: Secret in action
+name: Complex input
 
 on:
   workflow_dispatch:
