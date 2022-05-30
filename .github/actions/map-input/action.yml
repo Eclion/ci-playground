@@ -1,0 +1,14 @@
+name: Map Input test
+description: testing of an action with a map/object as input
+
+inputs:
+  stuff:
+    description: map/object input
+    required: false
+    default: ""
+
+runs:
+  steps:
+    - shell: bash
+      run: |
+        echo "${{ stuff.thing }}"
