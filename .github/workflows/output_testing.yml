@@ -13,25 +13,76 @@ jobs:
     name: 'Input validation'
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/checkout@v3
 
     - name: Json format check
       id: json_format_check
-      run: for file in $(find . -type f -name *.json); do $(cat $file | jq empty) || echo "$file is not a valid json file"; done
+      run: echo "::set-output name=output::$(for file in $(find . -type f -name *.json); do $(cat $file | jq empty) || echo \"$file is not a valid json file\"; done)
       continue-on-error: true
 
+    # https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions#example-declaring-outputs-for-composite-actions
     - name: Control character check
       id: ctrl_char_check
-      run: grep "{" -r . | sed "s/:.*//g" | uniq
+      run: echo "::set-output name=output::$(grep '\\' --include=*.json -r . | sed 's/:.*//g' | uniq)"
       continue-on-error: true
 
     - name: Display outputs
-      run: echo "json outcome is ${{ steps.json_format_check.outcome }}" && echo "json output is ${{ steps.json_format_check.outputs.stdout }}" && echo "char check output is ${{ steps.ctrl_char_check.outputs.stdout }}" && echo "char check length is ${{ steps.json_format_check.outputs.stdout.length }}"
+      run: echo "json output is ${{ steps.json_format_check.outputs.output }}" && echo "char check output is ${{ steps.ctrl_char_check.outputs.output }}" && echo "char check length is ${{ steps.json_format_check.outputs.output.length }}"
       
-    #- name: Test script
-    #  uses: actions/github-script@v6
-    #  if: github.event_name == 'pull_request'
-    #  with:
-    #    github-token: ${{ secrets.TOKEN }}
-    #    script: |
-    #      const output = `${{ steps.json_format_check.outputs.stdout }}`
-  
+    - name: Test script
+      uses: actions/github-script@v6
+      if: github.event_name == 'pull_request'
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          // 1. Retrieve existing bot comments for the PR
+          const { data: comments } = await github.rest.issues.listComments({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            issue_number: context.issue.number,
+          })
+          const botComment = comments.find(comment => {
+            return comment.user.type === 'Bot' && comment.body.includes('Playground output')
+          })
+
+    
+          // 2. Prepare format of the comment
+          let output = `### Playground output\n`
+
+          if ("${{ steps.ctrl_char_check.outputs.output }}" != "") {
+            output = output + "\nCtrl char check list:\n${{ steps.ctrl_char_check.outputs.output }}"
+          }
+
+          if ("${{ steps.json_format_check.outputs.output }}" != "") {
+            output = output + "\nJson validity list:\n${{ steps.json_format_check.outputs.output }}"
+          }
+          
+          if (("${{ steps.ctrl_char_check.outputs.output }}" == "") && ("${{ steps.json_format_check.outputs.output }}" == "")) {
+            output = output + "#### Inputs validated\n"
+          }
+
+
+          // 3. If we have a comment, update it, otherwise create a new one
+          if (botComment) {
+            github.rest.issues.updateComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              comment_id: botComment.id,
+              body: output
+            })
+          } else {
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: output
+            })
+          }
+
+    - name: Fail if a check failed
+      run: |
+        [[ -z "${{ steps.json_format_check.outputs.output }}" ]] || echo "The following files are invalid json:" && echo "${{ steps.json_format_check.outputs.output }}"
+        [[ -z "${{ steps.ctrl_char_check.outputs.output }}" ]] || echo "The following files contain control characters:" && echo "${{ steps.ctrl_char_check.outputs.output }}"
+        exit 1
+      if: ${{ steps.json_format_check.outputs.output != '' || steps.ctrl_char_check.outputs.output != '' }}
+      

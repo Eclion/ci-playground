@@ -1,0 +1,16 @@
+name: Secret arg testing
+description: Check if it is possible to set a secret as default param
+inputs:
+  some_secret:
+    description: secret value.
+    required: false
+    default: "${{ secrets.MY_SECRET }}"
+
+runs:
+  using: composite
+  steps:
+    - name: Check presence of tag or image
+      shell: bash
+      run: |
+        [[ -z "${{ inputs.some_secret }}" ]] && echo "secrets not set!"
+        [[ -z "${{ inputs.some_secret }}" ]] || echo "secrets set: ${{ inputs.some_secret }}"
