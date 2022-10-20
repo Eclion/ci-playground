@@ -15,7 +15,8 @@ jobs:
       - shell: bash
         id: set-matrix
         run: |
-          echo ::set-output name=matrix::'[{"java-version":"17",},"name":"spoon-feeder","maven-module":"spoon-feeder"}]'
+          echo ::set-output name=matrix::'[{"name":"testA","java-version":"17","maven-module":"testA"},{"name":"testB","java-version":"17","maven-module":"testB"}]'
+          
         
   matrix-job:
     runs-on: ubuntu-latest
