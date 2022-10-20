@@ -6,12 +6,6 @@ name: Git tests
 on:
   push:
 
-inputs:
-      build-many-matrix:
-        required: false
-        description: array of {name, dockerfile, arg} objects. ex [{"name":"toto", "dockerfile":"Dockerfile.toto", "arg":"test=value", "java-version":"17", "maven-module":"toto"}]
-        type: string
-
 jobs:
   build-matrix-data:
     runs-on: ubuntu-latest
