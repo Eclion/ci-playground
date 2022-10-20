@@ -13,9 +13,13 @@ jobs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
       - shell: bash
+        id: set-input
+        run: |
+          echo "json=[{\"name\":\"testA\",\"java-version\":\"17\",\"maven-module\":\"testA\"},{\"name\":\"testB\",\"java-version\":\"17\",\"maven-module\":\"testB\"}]" >> $GITHUB_OUTPUT
+      - shell: bash
         id: set-matrix
         run: |
-          echo ::set-output name=matrix::'[{"name":"testA","java-version":"17","maven-module":"testA"},{"name":"testB","java-version":"17","maven-module":"testB"}]'
+          echo 'matrix=${{ steps.set-input.outputs.json }}' >> $GITHUB_OUTPUT
           
         
   matrix-job:
