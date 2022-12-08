@@ -19,6 +19,7 @@ jobs:
 
           git add .
           git switch -c tests/pr
+          git pull
           git diff --staged
           git commit -m "auto: $(date +%Y%M%d%H%m)"
           git push origin tests/pr
