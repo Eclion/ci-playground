@@ -8,6 +8,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
       - run: |
           echo "$(date +%Y%M%d%H%m%s)" > my-new-file.txt
@@ -28,6 +30,8 @@ jobs:
               --body "" \
               --title "$PR_TITLE" \
               --draft
+
+            gh pr ready "$PR_TITLE"
           fi
         env:
           GITHUB_TOKEN: ${{ github.token }}
