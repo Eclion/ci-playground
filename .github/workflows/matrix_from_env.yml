@@ -2,9 +2,8 @@
 
 name: Git tests
 
-# Controls when the workflow will run
 on:
-  push:
+  workflow_dispatch:
 
 jobs:
   build-matrix-data:
