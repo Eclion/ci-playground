@@ -1,0 +1,31 @@
+name: PR Test
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - run: |
+          echo "$(date +%Y%M%d%H%m%s)" > my-new-file.txt
+          git add .
+          git switch -c tests/pr
+          git diff --staged
+          git commit -m "auto: $(date +%Y%M%d%H%m)"
+          git push origin tests/pr
+
+          PR_TITLE="PR test"
+          if $(gh pr list | grep -q "$PR_TITLE"); then
+            gh pr create \
+              --base master \
+              --body "" \
+              --title "$PR_TITLE" \
+              --draft
+          fi
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          
+       
