@@ -30,7 +30,7 @@ jobs:
           PR_TITLE="PR test"
           if ! $(gh pr list | grep -q "$PR_TITLE"); then
             gh pr create \
-              --base master \
+              --base main \
               --body "" \
               --title "$PR_TITLE"
           fi
