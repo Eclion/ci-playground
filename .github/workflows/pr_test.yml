@@ -11,6 +11,10 @@ jobs:
 
       - run: |
           echo "$(date +%Y%M%d%H%m%s)" > my-new-file.txt
+
+          git config --global user.email "you@example.com"
+          git config --global user.name "Eclion"
+
           git add .
           git switch -c tests/pr
           git diff --staged
