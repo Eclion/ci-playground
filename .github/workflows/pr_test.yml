@@ -28,14 +28,11 @@ jobs:
           git push origin tests/pr
 
           PR_TITLE="PR test"
-          if $(gh pr list | grep -q "$PR_TITLE"); then
+          if ! $(gh pr list | grep -q "$PR_TITLE"); then
             gh pr create \
               --base master \
               --body "" \
-              --title "$PR_TITLE" \
-              --draft
-
-            gh pr ready "$PR_TITLE"
+              --title "$PR_TITLE"
           fi
         env:
           GITHUB_TOKEN: ${{ github.token }}
