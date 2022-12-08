@@ -14,6 +14,7 @@ jobs:
       - run: |
           git config --global user.email "you@example.com"
           git config --global user.name "Eclion"
+          git config --global pull.rebase true
 
           git switch -c tests/pr
           git pull origin tests/pr
@@ -22,7 +23,7 @@ jobs:
           git add .
           
           git diff --staged
-          
+
           git commit -m "auto: $(date +%Y%M%d%H%m)"
           git push origin tests/pr
 
