@@ -10,4 +10,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: checkout@${{ env.CHECKOUT_VERSION }}
-        uses: actions/checkout@${{ env.CHECKOUT_VERSION }}
+        uses: actions/checkout@${{ env.CHECKOUT_VERSION }} # doesn't work as it doesn't find env

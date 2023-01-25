@@ -1,0 +1,18 @@
+name: Use link
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - run:
+          ln -d -s $(pwd)/.github/actions/map-input $(pwd)/.github/actions/my-action
+      - run:
+          ls -l $(pwd)/.github/actions/my-action
+      - uses: ./.github/actions/my-action
+        with:
+          stuff:
+            thing: hello from inside!
