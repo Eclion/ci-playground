@@ -9,10 +9,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - run:
-          ln -d -s $(pwd)/.github/actions/map-input $(pwd)/.github/actions/my-action
+          ln -d -s $(pwd)/.github/actions/action-with-secrets $(pwd)/.github/actions/my-action
       - run:
           ls -l $(pwd)/.github/actions/my-action
       - uses: ./.github/actions/my-action
-#        with:
-#          stuff:
-#            thing: hello from inside!
