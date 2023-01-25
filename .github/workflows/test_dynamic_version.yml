@@ -1,0 +1,13 @@
+name: Dynamic version
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    env:
+      CHECKOUT_VERSION: 'v3'
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout@${{ env.CHECKOUT_VERSION }}
+        uses: actions/checkout@${{ env.CHECKOUT_VERSION }}
