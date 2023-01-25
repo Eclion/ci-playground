@@ -13,6 +13,6 @@ jobs:
       - run:
           ls -l $(pwd)/.github/actions/my-action
       - uses: ./.github/actions/my-action
-        with:
-          stuff:
-            thing: hello from inside!
+#        with:
+#          stuff:
+#            thing: hello from inside!
